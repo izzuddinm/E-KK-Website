@@ -3,6 +3,7 @@ import http from '../http-common'
 class Anggota_KeluargaService{
 
     create(data) {
+        console.log(data)
         return http.post("/anggotakeluarga/insert", data);
     }
     getAll() {
@@ -17,10 +18,14 @@ class Anggota_KeluargaService{
     }
 
     getAKbyId(id) {
-        return http.get(`/anggotakeluarga/getakbyid/${id}`);
+        return http.get(`/anggotakeluarga/getbyid/${id}`);
     }
     getAKbyIdAK(id_kk) {
         return http.get(`/anggotakeluarga/getakbyidak/${id_kk}`)
+    }
+
+    deleteAKbyIdAK(id_kk) {
+        return http.delete(`/anggotakeluarga/deleteakbyidak/${id_kk}`)
     }
 }
 

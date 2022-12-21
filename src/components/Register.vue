@@ -15,66 +15,76 @@
         <div class="col-md-9 register-right justify-content-center">
           <div class="tab-content" id="myTabContent">
             <div
+              @submit.prevent="inputRegister"
               class="tab-pane fade show active"
               id="home"
               role="tabpanel"
               aria-labelledby="home-tab"
             >
               <h3 class="register-heading">Register Account</h3>
-              <form @submit="inputRegistrasi">
-                <div class="d-flex register-form" >
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <input
-                    v-model="dataRegistrasi.nama"
-                      type="text"
-                      class="form-control"
-                      placeholder="Username"
-                      value=""
-                    />
-                  </div>
-                  <div class="form-group">
-                    <input
-                    v-model="dataRegistrasi.email"
-                      type="email"
-                      class="form-control"
-                      placeholder="Your Email"
-                      value=""
-                    />
-                  </div>
-                  <div class="">
-                    <router-link to="/">
-                      <button class="btnRegister">Log In</button>
-                    </router-link>
-                  </div>
-                </div>
+              <div>
+                <form>
+                  <div class="d-flex register-form">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input
+                          v-model="registrasiData.nama"
+                          type="text"
+                          class="form-control"
+                          placeholder="Username"
+                          value=""
+                        />
+                      </div>
+                      <div class="form-group">
+                        <input
+                          v-model="registrasiData.email"
+                          type="email"
+                          class="form-control"
+                          placeholder="Your Email"
+                          value=""
+                        />
+                        <p v-if="emailValid" class="text-danger">Email Sudah Digunakan</p>
+                      </div>
+                      <div class="">
+                        <router-link to="/" class="mt-5">
+                          <button class="btnRegister mt-5">Log In</button>
+                        </router-link>
+                      </div>
+                    </div>
 
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <input
-                    v-model="dataRegistrasi.password"
-                      type="password"
-                      class="form-control"
-                      placeholder="Create Password"
-                      value=""
-                    />
-                  </div>
-                  <div class="form-group">
-                    <input
-                    v-model="dataRegistrasi.password"
-                      type="password"
-                      class="form-control"
-                      placeholder="Confirm Password"
-                      value=""
-                    />
-                  </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <input
+                          v-model="registrasiData.password"
+                          type="password"
+                          class="form-control"
+                          placeholder="Create Password"
+                          value=""
+                        />
+                      </div>
+                      <div class="form-group">
+                        <input
+                          v-model="password2"
+                          type="password"
+                          class="form-control"
+                          placeholder="Confirm Password"
+                          value=""
+                        />
+                        <p v-if="passwordValid" class="text-danger">
+                          Password Tidak Sama
+                        </p>
+                      </div>
 
-                  <div class="d-flex">
-                    <button type="submit" class="btnRegister">{{btnregister}}</button>
+                      <div class="d-flex ">
+                        <button type="submit" class="btnRegister mt-5">Register</button>
+                      </div>
+                    </div>
+                    <div>
+                      <h5 v-if="success">Berhasil Daftar silahkan login</h5>
+                    </div>
                   </div>
-                </div>
+                </form>
               </div>
-              </form>
             </div>
           </div>
         </div>
@@ -84,43 +94,73 @@
 </template>
 
 <script>
-import UserService from '@/services/UserService';
+import UserService from "@/services/UserService";
 export default {
   name: "RegisterComponent",
-  data(){
+  // data(){
+  //   return {
+  //     dataRegistrasi: {
+  //       "nama": null,
+  //     "email": null,
+  //    "password": null
+  //     },
+  //   btnregister:"Register"
+  //   }
+  // },
+  data() {
     return {
-      dataRegistrasi: {
-        "nama": null,
-      "email": null,
-     "password": null
+      registrasiData: {
+        email: null,
+        nama: null,
+        password: "null",
       },
-    btnregister:"Register"
-    }
+      password2: "",
+      emailValid: false,
+      passwordValid: false,
+      btnLogin: false,
+      success: false,
+      btnRegister: true,
+      gagal: false,
+    };
   },
   methods: {
-    inputRegistrasi() {
-      let data = this.dataRegistrasi;
-      if (this.btnregister === "Register") {
+    inputRegister() {
+      let data = this.registrasiData;
+      let password1 = data.password;
+      let password2 = this.password2;
+
+      this.success = false;
+      this.emailValid = false;
+      this.passwordValid = false;
+      if (password1 == password2) {
         UserService.create(data)
           .then((response) => {
-            console.log(response.data);
-            console.log("gagal")
+            console.log(response);
+            this.registrasiData = {};
+            this.password2 = "";
+            this.success = true;
+            this.btnLogin = true;
+            this.btnRegister = false;
+            this.emailValid = true
           })
           .catch((e) => {
             console.log(e);
-        
+            if (e.response.data.status === 500) {
+              this.emailValid = true;
+            }
           });
-        // location.reload();
-        }
+      } else {
+        this.passwordValid = true;
+
+      }
     },
   },
-
 };
 </script>
 
 <style scope>
 .register {
-  background: linear-gradient(to right, #41aaeb, #78c4d7);
+  background: linear-gradient(to left, #8d80df, #6277d6);
   margin-top: 3%;
   padding: 3%;
 }
@@ -184,7 +224,7 @@ export default {
   border: none;
   border-radius: 1.5rem;
   padding: 2%;
-  background: #41aaeb;
+  background: #8d80df;
   color: #fff;
   font-weight: 600;
   width: 50%;
@@ -193,7 +233,7 @@ export default {
 .register .nav-tabs {
   margin-top: 3%;
   border: none;
-  background: #41aaeb;
+  background: #8d80df;
   border-radius: 1.5rem;
   width: 28%;
   float: right;

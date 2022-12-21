@@ -8,7 +8,7 @@
         background-color: linear-gradient(to right, #41aaeb, #78c4d7);
       "
     >
-      <div class="p-3" style="color: #41aaeb">
+      <div class="p-3 judul" >
         <h1 class="ml-2">
           <img src="../assets/family.png" style="width: 40px" alt="" />{{ title }} Kartu
           Keluarga
@@ -18,11 +18,12 @@
     <div class="row ml-3">
       <div>
         <router-link to="/dashboard">
-          <button type="button" class="btn btn-primary ml-3 btn">Back</button>
+          <button type="button" class="btn btn-warning ml-3 btn">Back</button>
         </router-link>
       </div>
       <div>
         <button
+          v-show="updateS"
           type="button"
           class="btn btn-secondary ml-3 btn"
           v-on:click="buttonUpdate"
@@ -33,7 +34,7 @@
       </div>
       <div>
         <router-link :to="{ name: 'listanggota' }">
-          <button type="button" class="btn btn-secondary ml-3 btn">
+          <button v-show="updateS" type="button" class="btn btn-secondary ml-3 btn">
             Lihat Anggota Keluarga
           </button>
         </router-link>
@@ -41,7 +42,7 @@
     </div>
     <div class="bg-light mb-4 mt-3" style="border-radius: 20px; height: 600px">
       <br /><br />
-      <form @submit="inputDataKK">
+      <form @submit.prevent="inputDataKK">
         <div class="form-row">
           <div class="form-group col-md-6">
             <h6 class="mr-2">Nomor Kartu Keluarga</h6>
@@ -159,7 +160,7 @@
           <button
             v-show="title == 'Tambah'"
             type="submit"
-            class="btntitle btn-success text-center"
+            class="btntitle btn-primary text-center"
           >
             {{ buttonVal }}
           </button>
@@ -171,6 +172,7 @@
 
 <script>
 import Kartu_KeluargaService from "@/services/Kartu_KeluargaService";
+import Swal from "sweetalert2";
 export default {
   name: "TambahKKComponents",
   methods: {
@@ -180,7 +182,9 @@ export default {
         Kartu_KeluargaService.create(data)
           .then((response) => {
             console.log(response.data);
+          
           })
+          Swal.fire("Sukses", "Data Anda Berhasil Ditambahkan !!", "success")
           .catch((e) => {
             console.log(e);
           });
@@ -190,6 +194,7 @@ export default {
           .then((response) => {
             console.log(response.data);
           })
+          Swal.fire("Sukses", "Data Anda Berhasil Diupdate !!", "success")
           .catch((e) => {
             console.log(e);
             console.log("gagal");

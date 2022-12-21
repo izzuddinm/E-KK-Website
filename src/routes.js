@@ -5,6 +5,7 @@ import TambahKK from './pages/TambahKK'
 import DetailKK from './pages/DetailKK'
 import UpdateKK from './pages/UpdateKK'
 import ListAnggota from './pages/ListAnggota'
+import DetailAK from './pages/DetailAK'
 
 export default [
     {
@@ -40,4 +41,9 @@ export default [
         name:"listanggota",
         component: ListAnggota
     },
+    {
+        path: "/detailkk/:id/listanggota/detailanggota/:idk",
+        name: "detailAnggota",
+        component: DetailAK
+    }
 ]
